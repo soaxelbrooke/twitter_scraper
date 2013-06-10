@@ -21,7 +21,7 @@ class Finder:
         self.search_options = "&rpp=100"
         self.page_index = 1
 
-        self._debug_level = 0;
+        self._debug_level = 0
 
         # setup oauth stuff
         self.oauth_token = oauth2.Token(key = access_key,
@@ -40,15 +40,17 @@ class Finder:
     def find_tweets(self, search_string):
         tweets = []
         json_response = self._get_json_tweets(search_string)
-        self.json_tweets = [json_response["results"]]
-        for tweet in json_response["results"]:
+        self.json_tweets = [json_response[u"results"]]
+        for tweet in json_response[u"results"]:
             tweets.append(tweet)
-        while (json_response["results"] != []):
+        while (json_response[u"results"] != []):
             time.sleep(1)
             self.page_index += 1
             json_response = self._get_json_tweets(search_string)
-            self.json_tweets.append(json_response["results"])
-            for tweet in json_response["results"]:
+            if u'error' in json_response.keys():
+                break
+            self.json_tweets.append(json_response[u"results"])
+            for tweet in json_response[u"results"]:
                 tweets.append(tweet)
             if (self.page_index > 100):
                 break
@@ -62,7 +64,6 @@ class Finder:
     def find_users(self, search_string):
         users = []
         json_response = self._get_json_users(search_string)
-        print(json_response[0].keys())
         self.json_users = json_response
         while (json_response != []):
             time.sleep(1)
@@ -119,12 +120,13 @@ class Finder:
     def _format_tweet(self, tweet):
         tweet["created_at"] = datetime.now().\
                               strptime(tweet["created_at"],
-                                       '%a, %d %B %Y %H:%M:%S +0000')
+                                       '%a, %d %b %Y %H:%M:%S +0000')
 
 if __name__ == '__main__':
     finder = Finder(consumer_key, consumer_secret, access_key, access_secret)
     search_string = "\"get dressed\" OR dressed OR \"put on clothes\" take OR takes \"so long\" OR forever"
     my_tweets = finder.find_tweets(search_string)
+    print(my_tweets[0].keys())
 
     time_diff = my_tweets[0]["created_at"]-my_tweets[-1]["created_at"]
     tweet_frequency = len(my_tweets)/time_diff.days

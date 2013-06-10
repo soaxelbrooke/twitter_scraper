@@ -20,33 +20,32 @@ class UserFinder:
         self.search_options = ''
 
     def find_users(self):
-        finder = tweetfind.TweetFinder(consumer_key, consumer_secret, access_key, access_secret)
+        finder = tweetfind.Finder(consumer_key, consumer_secret, access_key, access_secret)
 
         finder.search_options += self.search_options
         user_dict = {}
-#        for identifier in self.identifiers:
-        identifier = self.identifiers[2]
-        users = [u[u'id'] for u in finder.find_tweets(identifier)]
-        
-        for user in users:
-            if user in user_dict.keys():
-                user_dict[user].append(identifier)
+        for identifier in self.identifiers:
+            users = [u[u'from_user'] for u in finder.find_tweets(identifier)]
 
-            else:
-                user_dict[user] = [identifier]
+            for user in users:
+                if user in user_dict.keys():
+                    if identifier not in user_dict[user]:
+                        user_dict[user].append(identifier)
+
+                else:
+                    user_dict[user] = [identifier]
 
         return user_dict
 
-    def set_search_options(search_options):
-        self.search_options
+    def set_search_options(self, search_options):
+        self.search_options = search_options
 
 
-print("Starting scrape..?")
 if __name__ == "__main__":
     print("Starting scrape...")
     
     identifier_list = ['love buying OR "shopping for" clothes',
-#                       '"john varvados" OR "seven for all mankind" OR levis OR chanel OR "gucci" OR "american apparel"',
+                       '"john varvados" OR "seven for all mankind" OR levis OR chanel OR "gucci" OR "american apparel"',
                        'selfie',
                        'drinking OR drunk OR "hung over"',
                        'vintage',
@@ -57,6 +56,9 @@ if __name__ == "__main__":
     
     user_weights = {}
     for user in users:
+        if len(users[user]) > 1:
+            print(user + ': ' + str(users[user]))
+    for user in users:
         if len(users[user]) in user_weights:
             user_weights[len(users[user])] += 1
 
@@ -65,3 +67,4 @@ if __name__ == "__main__":
 
     print("Complete!")
     print(user_weights)
+
