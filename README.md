@@ -14,10 +14,12 @@ Using Twitter's free search API and some data crunching in Python, along with st
 What?
 -----
 I need to collect:
-1. Users that match selection criteria (like to shop for clothes, talk about brands, tweet about selfies, etc.)
-2. The selection criteria for which they were selected
-3. All of their tweets.  Forever.
+ + Users that match selection criteria (like to shop for clothes, talk about brands, tweet about selfies, etc.)
+ + The selection criteria for which they were selected
+ + All of their tweets.  Forever.
+
 Collecting these users and their tweets will hopefully give me a sufficiently large population that is sufficiently part of my target audience to give me greater insight and concrete data about what features they want/enjoy/etc.
+
 Also in theory, given a sufficiently large population, I should be able to select only users that match more selection criteria, placing them closer to the center and giving me higher confidence of their likelihood to want Impress.
 Who?
 ----
